@@ -31,7 +31,6 @@ def add_trade():
         'trade_type': data['trade_type']  # 'buy' or 'sell'
     }
     trades.append(trade)
-    return jsonify(trade), 201
 
 
 # Endpoint to get a trade by ID
