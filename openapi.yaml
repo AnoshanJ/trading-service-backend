@@ -1,0 +1,157 @@
+openapi: 3.0.3
+info:
+  title: Simple Stock Trading API
+  description: >-
+    This is a sample API specification for a simple stock trading application 
+    with in-memory trading data written in Python.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Learn more about Stock Trading
+  url: https://www.investopedia.com/terms/s/stocktrading.asp
+servers:
+  - url: http://localhost:5000
+tags:
+  - name: trades
+    description: In-memory stock trading API
+
+paths:
+  /trading/trades:
+    get:
+      summary: List all trades
+      tags:
+        - trades
+      operationId: listAllTrades
+      responses:
+        '200':
+          description: A list of trades
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeList'
+    post:
+      summary: Add a new trade
+      tags:
+        - trades
+      operationId: addNewTrade
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trade'
+      responses:
+        '201':
+          description: New trade created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trade'
+        '400':
+          description: Invalid input
+
+  /trading/trades/{tradeId}:
+    get:
+      summary: Find trade by ID
+      tags:
+        - trades
+      operationId: findTradeById
+      parameters:
+        - name: tradeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trade'
+        '404':
+          description: Trade not found
+    put:
+      summary: Update an existing trade
+      tags:
+        - trades
+      operationId: updateTrade
+      parameters:
+        - name: tradeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trade'
+      responses:
+        '200':
+          description: Trade updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trade'
+        '400':
+          description: Invalid input
+        '404':
+          description: Trade not found
+    delete:
+      summary: Delete a trade
+      tags:
+        - trades
+      operationId: deleteTrade
+      parameters:
+        - name: tradeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Trade deleted
+        '404':
+          description: Trade not found
+
+components:
+  schemas:
+    Trade:
+      type: object
+      required:
+        - stock_symbol
+        - price
+        - quantity
+        - trade_type
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        stock_symbol:
+          type: string
+          example: 'AAPL'
+        price:
+          type: number
+          format: double
+          example: 150.5
+        quantity:
+          type: integer
+          example: 10
+        trade_type:
+          type: string
+          example: 'buy'
+          enum:
+            - buy
+            - sell
+    TradeList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Trade'
