@@ -30,7 +30,7 @@ def add_trade():
         'quantity': data['quantity'],
         'trade_type': data['trade_type']  # 'buy' or 'sell'
     }
-trades.append(trade)
+    trades.append(trade)
     return jsonify(trade), 201
 
 
